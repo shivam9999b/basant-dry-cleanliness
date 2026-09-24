@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Website Content | Basanta Admin</title>
+
+  <link
+    rel="stylesheet"
+    href="content-admin.css"
+  >
+
+</head>
+
+
+<body>
+
+
+<!-- ================= HEADER ================= -->
+
+<header class="content-header">
+
+  <div class="brand">
+
+    <div class="brand-icon">
+      B
+    </div>
+
+    <div>
+
+      <strong>
+        BASANTA
+      </strong>
+
+      <span>
+        DRY CLEANLINESS
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <div class="header-title">
+    Website Content
+  </div>
+
+
+  <a
+    href="admin.html"
+    class="back-btn"
+  >
+    ← Orders
+  </a>
+
+</header>
+
+
+
+<main class="content-container">
+
+
+<!-- =================================================
+     HOMEPAGE
+================================================= -->
+
+<section class="panel">
+
+  <div class="panel-heading">
+
+    <div>
+
+      <small>
+        HOMEPAGE
+      </small>
+
+      <h1>
+        Homepage Control
+      </h1>
+
+      <p>
+        Homepage का content और image यहाँ से बदलें।
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <form id="heroForm">
+
+
+    <label>
+      Main Heading
+    </label>
+
+    <input
+      type="text"
+      id="heroTitle"
+      placeholder="Fresh Clothes. Fresh Confidence."
+    >
+
+
+    <label>
+      Subtitle
+    </label>
+
+    <input
+      type="text"
+      id="heroSubtitle"
+      placeholder="Professional Laundry & Dry Cleaning"
+    >
+
+
+    <label>
+      Description
+    </label>
+
+    <textarea
+      id="heroDescription"
+      rows="4"
+      placeholder="Homepage description"
+    ></textarea>
+
+
+    <label>
+      Button Text
+    </label>
+
+    <input
+      type="text"
+      id="heroButton"
+      placeholder="Book a Pickup"
+    >
+
+
+    <label>
+      Button Link
+    </label>
+
+    <input
+      type="text"
+      id="heroButtonLink"
+      placeholder="#booking"
+    >
+
+
+    <!-- ================= HERO IMAGE ================= -->
+
+    <div class="upload-box">
+
+      <label>
+        Homepage Hero Image
+      </label>
+
+
+      <div class="upload-row">
+
+        <input
+          type="file"
+          id="heroImageFile"
+          accept="image/jpeg,image/png,image/webp"
+        >
+
+
+        <button
+          type="button"
+          id="heroUploadBtn"
+          class="upload-btn"
+        >
+          🖼️ Upload Image
+        </button>
+
+      </div>
+
+
+      <small class="upload-help">
+        JPG, PNG या WebP • Recommended 1200×800
+      </small>
+
+
+      <div
+        id="heroImagePreview"
+        class="image-preview"
+      >
+
+        <span>
+          No image selected
+        </span>
+
+      </div>
+
+
+      <!-- Uploaded URL -->
+
+      <input
+        type="hidden"
+        id="heroImage"
+      >
+
+      <p id="imageUploadMessage" class="upload-message"></p>
+
+    </div>
+
+
+    <button
+      type="submit"
+      class="save-btn"
+    >
+      Save Homepage
+    </button>
+
+
+    <p id="heroMessage"></p>
+
+  </form>
+
+</section>
+
+
+
+<!-- =================================================
+     ARTICLES
+================================================= -->
+
+<section class="panel">
+
+  <div class="panel-heading">
+
+    <div>
+
+      <small>
+        ARTICLES
+      </small>
+
+      <h1>
+        Article Management
+      </h1>
+
+      <p>
+        Article add, edit और publish/unpublish करें।
+      </p>
+
+    </div>
+
+
+    <button
+      id="newArticleBtn"
+      class="new-btn"
+      type="button"
+    >
+      + New Article
+    </button>
+
+  </div>
+
+
+  <div
+    id="articlesList"
+    class="articles-list"
+  >
+
+    <div class="loading">
+      Articles loading...
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- =================================================
+     ARTICLE EDITOR
+================================================= -->
+
+<section
+  id="articleEditor"
+  class="panel editor-panel"
+  hidden
+>
+
+
+  <div class="panel-heading">
+
+    <div>
+
+      <small>
+        ARTICLE EDITOR
+      </small>
+
+      <h1 id="editorTitle">
+        New Article
+      </h1>
+
+    </div>
+
+
+    <button
+      id="closeEditorBtn"
+      class="close-editor"
+      type="button"
+    >
+      ×
+    </button>
+
+  </div>
+
+
+
+  <form id="articleForm">
+
+
+    <input
+      type="hidden"
+      id="articleId"
+    >
+
+
+    <label>
+      Article Title
+    </label>
+
+    <input
+      type="text"
+      id="articleTitle"
+      required
+      placeholder="Article title"
+    >
+
+
+    <label>
+      Slug
+    </label>
+
+    <input
+      type="text"
+      id="articleSlug"
+      placeholder="my-article"
+    >
+
+
+    <label>
+      Category
+    </label>
+
+    <input
+      type="text"
+      id="articleCategory"
+      placeholder="Dry Cleaning"
+    >
+
+
+    <label>
+      Short Description
+    </label>
+
+    <textarea
+      id="articleDescription"
+      rows="3"
+      placeholder="Short article description"
+    ></textarea>
+
+
+
+    <!-- ================= ARTICLE IMAGE ================= -->
+
+    <div class="upload-box">
+
+      <label>
+        Article Image
+      </label>
+
+
+      <div class="upload-row">
+
+        <input
+          type="file"
+          id="articleImageFile"
+          accept="image/jpeg,image/png,image/webp"
+        >
+
+
+        <button
+          type="button"
+          id="articleUploadBtn"
+          class="upload-btn"
+        >
+          🖼️ Upload Image
+        </button>
+
+      </div>
+
+
+      <small class="upload-help">
+        JPG, PNG या WebP • Recommended 1200×675
+      </small>
+
+
+      <div
+        id="articleImagePreview"
+        class="image-preview"
+      >
+
+        <span>
+          No image selected
+        </span>
+
+      </div>
+
+
+      <input
+        type="hidden"
+        id="articleImage"
+      >
+
+    </div>
+
+
+
+    <!-- ================= CONTENT ================= -->
+
+    <label>
+      Article Content
+    </label>
+
+    <textarea
+      id="articleContent"
+      rows="15"
+      placeholder="Article content यहाँ लिखें..."
+    ></textarea>
+
+
+    <label>
+      Author
+    </label>
+
+    <input
+      type="text"
+      id="articleAuthor"
+      value="Basanta"
+    >
+
+
+    <label class="check-label">
+
+      <input
+        type="checkbox"
+        id="articlePublished"
+        checked
+      >
+
+      Published
+
+    </label>
+
+
+
+    <div class="editor-actions">
+
+      <button
+        type="submit"
+        class="save-btn"
+      >
+        Save Article
+      </button>
+
+
+      <button
+        type="button"
+        id="cancelArticleBtn"
+        class="cancel-btn"
+      >
+        Cancel
+      </button>
+
+    </div>
+
+
+    <p id="articleMessage"></p>
+
+  </form>
+
+</section>
+
+
+
+<!-- =================================================
+     CONTACT
+================================================= -->
+
+<section class="panel">
+
+  <div class="panel-heading">
+
+    <div>
+
+      <small>
+        CONTACT
+      </small>
+
+      <h1>
+        Contact Information
+      </h1>
+
+    </div>
+
+  </div>
+
+
+
+  <form id="contactForm">
+
+
+    <label>
+      Phone
+    </label>
+
+    <input
+      type="text"
+      id="contactPhone"
+      placeholder="Mobile number"
+    >
+
+
+    <label>
+      WhatsApp
+    </label>
+
+    <input
+      type="text"
+      id="contactWhatsapp"
+      placeholder="WhatsApp number"
+    >
+
+
+    <label>
+      Email
+    </label>
+
+    <input
+      type="email"
+      id="contactEmail"
+      placeholder="Email address"
+    >
+
+
+    <label>
+      Address
+    </label>
+
+    <textarea
+      id="contactAddress"
+      rows="3"
+      placeholder="Business address"
+    ></textarea>
+
+
+    <label>
+      Instagram
+    </label>
+
+    <input
+      type="text"
+      id="contactInstagram"
+      placeholder="Instagram URL"
+    >
+
+
+    <label>
+      Facebook
+    </label>
+
+    <input
+      type="text"
+      id="contactFacebook"
+      placeholder="Facebook URL"
+    >
+
+
+    <button
+      type="submit"
+      class="save-btn"
+    >
+      Save Contact
+    </button>
+
+
+    <p id="contactMessage"></p>
+
+  </form>
+
+</section>
+
+
+</main>
+
+
+
+<!-- =================================================
+     SUPABASE
+================================================= -->
+
+<script
+  src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
+
+<script
+  src="content-admin.js"
+></script>
+
+
+</body>
+
+</html>
