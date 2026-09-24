@@ -1,6 +1,6 @@
 /* =====================================================
    BASANTA DRY CLEANLINESS
-   app.js (COMPLETE & UPDATED)
+   app.js (COMPLETE & FIXED)
 ===================================================== */
 
 
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 /* =====================================================
-   MOBILE MENU TOGGLE (UPDATED FOR YOUR CSS)
+   MOBILE MENU TOGGLE
 ===================================================== */
 
 function setupMobileMenu() {
@@ -131,7 +131,6 @@ function setupMobileMenu() {
 
   if (mobileMenuBtn && mobileMenu) {
     mobileMenuBtn.addEventListener("click", () => {
-      // Button animation aur Menu show toggle
       mobileMenuBtn.classList.toggle("is-open");
       mobileMenu.classList.toggle("show");
       document.body.classList.toggle("mobile-menu-open");
@@ -140,7 +139,6 @@ function setupMobileMenu() {
       mobileMenuBtn.setAttribute("aria-expanded", String(isOpen));
     });
 
-    // Jab kisi link par click ho toh menu close ho jaye
     const mobileLinks = mobileMenu.querySelectorAll("a, button");
     mobileLinks.forEach((link) => {
       link.addEventListener("click", () => {
@@ -239,7 +237,6 @@ function openBookingModal() {
   bookingModal.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
 
-  // Agar mobile menu open tha toh close kar do
   const mobileMenuBtn = document.getElementById("mobileMenuBtn");
   const mobileMenu = document.getElementById("mobileMenu");
   if (mobileMenuBtn && mobileMenu) {
@@ -416,25 +413,21 @@ async function loadContactInformation() {
       return;
     }
 
-    // Phone
     const phone = document.getElementById("contactPhone");
     const phoneLink = document.getElementById("contactPhoneLink");
     if (phone) phone.textContent = data.phone || "Not available";
     if (phoneLink && data.phone) phoneLink.href = "tel:" + String(data.phone).replace(/[^0-9+]/g, "");
 
-    // WhatsApp
     const whatsapp = document.getElementById("contactWhatsapp");
     const whatsappLink = document.getElementById("contactWhatsappLink");
     if (whatsapp) whatsapp.textContent = data.whatsapp || "Not available";
     if (whatsappLink && data.whatsapp) whatsappLink.href = "https://wa.me/" + String(data.whatsapp).replace(/[^0-9]/g, "");
 
-    // Email
     const email = document.getElementById("contactEmail");
     const emailLink = document.getElementById("contactEmailLink");
     if (email) email.textContent = data.email || "Not available";
     if (emailLink && data.email) emailLink.href = "mailto:" + data.email;
 
-    // Address & Socials
     const address = document.getElementById("contactAddress");
     if (address) address.textContent = data.address || "Address not available";
 
@@ -458,7 +451,7 @@ function showContactError() {
 }
 
 
-/*=====================================================
+/* =====================================================
    LOAD ARTICLES
 ===================================================== */
 
@@ -485,19 +478,15 @@ async function loadArticles() {
     articleGrid.innerHTML = "";
 
     data.forEach((article) => {
-
       const card = document.createElement("article");
-
       card.className = "article-card";
 
       let imageHTML = `<div class="article-image-placeholder">📰</div>`;
-
       if (article.image_url) {
         imageHTML = `<img src="${escapeHTML(article.image_url)}" alt="${escapeHTML(article.title)}" loading="lazy">`;
       }
 
       const description = article.description || article.content || "";
-
       const shortDescription =
         description.length > 150
           ? description.substring(0, 150) + "..."
@@ -507,23 +496,13 @@ async function loadArticles() {
         <div class="article-image">${imageHTML}</div>
 
         <div class="article-content">
-
           ${article.category ? `<span class="article-category">${escapeHTML(article.category)}</span>` : ""}
-
           <h3>${escapeHTML(article.title || "Untitled")}</h3>
-
           <p>${escapeHTML(shortDescription)}</p>
 
           <div class="article-meta">
-
-            <span>
-              ${escapeHTML(article.author || "Basanta")}
-            </span>
-
-            <span>
-              ${formatArticleDate(article.created_at)}
-            </span>
-
+            <span>${escapeHTML(article.author || "Basanta")}</span>
+            <span>${formatArticleDate(article.created_at)}</span>
           </div>
 
           <button
@@ -533,47 +512,21 @@ async function loadArticles() {
           >
             Read More →
           </button>
-
         </div>
       `;
 
       articleGrid.appendChild(card);
     });
 
-
     document.querySelectorAll(".article-read-btn").forEach((button) => {
-
       button.addEventListener("click", function () {
-
-        const articleId =
-          String(button.dataset.articleId);
-
-        const article =
-          data.find(
-            (item) =>
-              String(item.id) === articleId
-          );
-
-        if (article) {
-
-          /* FIX: article ID भेजना है */
-
-          window.location.href =
-            `article.html?id=${encodeURIComponent(articleId)}`;
-
-        }
-
+        const articleId = String(button.dataset.articleId);
+        window.location.href = `article.html?id=${encodeURIComponent(articleId)}`;
       });
-
     });
 
   } catch (error) {
-
-    console.error(
-      "Articles Exception:",
-      error
-    );
-
+    console.error("Articles Exception:", error);
   }
 }
 
@@ -593,12 +546,7 @@ async function loadFooterLinks() {
       .eq("active", true)
       .order("sort_order", { ascending: true });
 
-    if (error) {
-      console.error("Footer Links Exception:", error);
-      return;
-    }
-
-    if (!data || !data.length) return;
+    if (error || !data || !data.length) return;
 
     const groups = {};
     data.forEach((link) => {
@@ -630,7 +578,6 @@ async function loadFooterLinks() {
       });
     });
 
-    console.log("Footer links loaded successfully.");
   } catch (error) {
     console.error("Footer Links Exception:", error);
   }
@@ -685,6 +632,7 @@ async function loadReviews() {
     console.error("Reviews Exception:", error);
   }
 }
+
 function setupReviewForm() {
   const reviewForm = document.getElementById("reviewForm");
   if (!reviewForm) return;
@@ -699,8 +647,7 @@ function setupReviewForm() {
     const name = nameInput ? nameInput.value.trim() : "";
     const comment = commentInput ? commentInput.value.trim() : "";
 
-    // Rating check (Dono methods se fetch karne ki koshish karta hai)
-    const ratingInput = 
+const ratingInput = 
       reviewForm.querySelector('input[name="rating"]:checked') || 
       document.querySelector('input[name="rating"]:checked');
 
@@ -754,7 +701,7 @@ function setupReviewForm() {
         customer_name: name,
         rating: rating,
         comment: comment,
-        approved: false // Admin approval ke liye pending
+        approved: false
       });
 
       if (error) {
@@ -786,7 +733,7 @@ function setupReviewForm() {
 
 
 /* =====================================================
-   SUBMIT BOOKING
+   SUBMIT BOOKING (FIXED WITH CLOTH DESCRIPTION)
 ===================================================== */
 
 async function submitBooking(event) {
@@ -797,6 +744,13 @@ async function submitBooking(event) {
   const address = document.getElementById("customerAddress")?.value.trim();
   const pickupDate = document.getElementById("pickupDate")?.value;
   const pickupTime = document.getElementById("pickupTime")?.value;
+
+  // 🟢 FIXED: Cloth Description/Details Fetch Logic
+  const clothDescription = 
+    document.getElementById("clothDescription")?.value.trim() || 
+    document.getElementById("clothDetails")?.value.trim() || 
+    document.getElementById("cloth_description")?.value.trim() ||
+    document.getElementById("serviceType")?.value || "";
 
   if (!name) return showMessage("Kripya apna naam dalein.", true);
   if (!phone || !/^[6-9]\d{9}$/.test(phone)) return showMessage("Sahi 10 digit mobile number dalein.", true);
@@ -823,6 +777,7 @@ async function submitBooking(event) {
   }
 
   try {
+    // 🟢 FIXED: cloth_description & cloth_details dono column me value pass karein
     const result = await supabaseClient
       .from("orders")
       .insert({
@@ -831,12 +786,15 @@ async function submitBooking(event) {
         address: address,
         pickup_date: pickupDate,
         pickup_time: pickupTime,
+        cloth_description: clothDescription,
+        cloth_details: clothDescription,
         status: "pending"
       })
       .select("id, order_number")
       .single();
 
     if (result.error || !result.data) {
+      console.error("Supabase Save Error:", result.error);
       showMessage("Booking save nahi hui. Supabase check karein.", true);
       button.disabled = false;
       button.textContent = oldText;
