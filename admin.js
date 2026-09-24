@@ -8,6 +8,7 @@
    SUPABASE CONFIG
 ===================================================== */
 
+// TODO: अपने Supabase Dashboard से प्रोजेक्ट URL और ANON KEY यहाँ डालें
 const SUPABASE_URL = "https://ubsyhqkefhtskxjpjzbf.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVic3locWtlZmh0c2t4anBqemJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4Mzk4NjQsImV4cCI6MjEwNTQxNTg2NH0.00-JsYNjdmb7OV51Tly1W8A9grQ9GR9E66E3Yyas-j8";
 
@@ -29,7 +30,7 @@ if (!supabaseClient) {
 
 
 /* =====================================================
-   DOM
+   DOM ELEMENTS
 ===================================================== */
 
 const ordersContainer = document.getElementById("ordersContainer");
@@ -43,7 +44,7 @@ const deliveredOrders = document.getElementById("deliveredOrders");
 
 
 /* =====================================================
-   MODAL
+   MODAL ELEMENTS
 ===================================================== */
 
 const orderModal = document.getElementById("orderModal");
@@ -56,7 +57,7 @@ const updateMessage = document.getElementById("updateMessage");
 
 
 /* =====================================================
-   DATA
+   DATA STATE
 ===================================================== */
 
 let allOrders = [];
@@ -144,6 +145,11 @@ async function loadOrders() {
   }
 
   try {
+    if (!supabaseClient) {
+      showOrdersError("Supabase Credentials मिसिंग हैं। admin.js में सेट करें।");
+      return;
+    }
+
     const { data, error } = await supabaseClient
       .from("orders")
       .select("*")
@@ -221,7 +227,7 @@ function renderOrders(orders) {
             ORDER ID
           </span>
           <h3>
-            ${escapeHTML(order.order_number || "-")}
+            ${escapeHTML(order.order_number || order.id || "-")}
           </h3>
         </div>
         <span class="order-status ${getStatusClass(order.status)}">
@@ -232,7 +238,7 @@ function renderOrders(orders) {
       <div class="order-card-info">
         <div>
           <small>Customer</small>
-          <strong>${escapeHTML(order.customer_name || "-")}</strong>
+          <strong>${escapeHTML(order.customer_name || order.name || "-")}</strong>
         </div>
 
         <div>
@@ -253,7 +259,7 @@ function renderOrders(orders) {
 
       <div class="order-card-bottom">
         <span>
-          ${escapeHTML(order.service_name || "Dry Cleaning")}
+          ${escapeHTML(order.service_name || order.service || "Dry Cleaning")}
         </span>
 
         <button class="manage-order-btn" data-id="${escapeHTML(order.id)}">
@@ -299,7 +305,7 @@ function openOrderModal(orderId) {
   }
 
   if (modalOrderId) {
-    modalOrderId.textContent = selectedOrder.order_number || "Order";
+    modalOrderId.textContent = selectedOrder.order_number || `Order #${selectedOrder.id}`;
   }
 
   if (statusSelect) {
@@ -310,7 +316,7 @@ function openOrderModal(orderId) {
     modalDetails.innerHTML = `
       <div class="detail-row">
         <span>Customer</span>
-        <strong>${escapeHTML(selectedOrder.customer_name || "-")}</strong>
+        <strong>${escapeHTML(selectedOrder.customer_name || selectedOrder.name || "-")}</strong>
       </div>
 
       <div class="detail-row">
@@ -335,18 +341,42 @@ function openOrderModal(orderId) {
 
       <div class="detail-row">
         <span>Service</span>
-        <strong>${escapeHTML(selectedOrder.service_name || "Dry Cleaning")}</strong>
+        <strong>${escapeHTML(selectedOrder.service_name || selectedOrder.service || "Dry Cleaning")}</strong>
       </div>
     `;
   }
 
-  // UPDATED: Cloth Description text set karna
+  // =====================================================
+  // UPDATED: CLOTH DETAILS / DESCRIPTION HANDLING LOGIC
+  // =====================================================
   const clothTextElem = document.getElementById("clothDescriptionText");
   if (clothTextElem) {
-    clothTextElem.innerText =
+    // 1. Check all possible column names from Supabase
+    let clothVal = 
       selectedOrder.cloth_description ||
       selectedOrder.cloth_details ||
-      "No cloth description provided";
+      selectedOrder.description ||
+      selectedOrder.clothes ||
+      selectedOrder.items_description ||
+      selectedOrder.items;
+
+    // 2. If data is an Array or Object (JSON format from order form)
+    if (typeof clothVal === "object" && clothVal !== null) {
+      if (Array.isArray(clothVal)) {
+        clothVal = clothVal
+          .map(i => typeof i === 'object' ? `${i.name || i.item || 'Item'} (x${i.quantity || i.qty || 1})` : i)
+          .join(", ");
+      } else {
+        clothVal = JSON.stringify(clothVal, null, 2);
+      }
+    }
+
+    // 3. Render exact value or fallback
+    if (clothVal && String(clothVal).trim() !== "") {
+      clothTextElem.innerText = String(clothVal);
+    } else {
+      clothTextElem.innerText = "No cloth description provided";
+    }
   }
 
   if (updateMessage) {
@@ -417,8 +447,6 @@ async function updateOrderStatus() {
       }
       return;
     }
-
-    console.log("STATUS UPDATED:", data[0]);
 
     if (updateMessage) {
       updateMessage.textContent = "✓ Status successfully updated";
@@ -532,7 +560,7 @@ function getStatusClass(status) {
 
 
 /* =====================================================
-   ERROR
+   ERROR DISPLAY
 ===================================================== */
 
 function showOrdersError(message) {
@@ -547,7 +575,7 @@ function showOrdersError(message) {
 
 
 /* =====================================================
-   HTML ESCAPE
+   HTML ESCAPE (XSS PROTECTION)
 ===================================================== */
 
 function escapeHTML(value) {
